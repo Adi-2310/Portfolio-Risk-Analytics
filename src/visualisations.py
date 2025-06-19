@@ -8,6 +8,7 @@ def plot_returns(returns_df):
     plt.xlabel('Date')
     plt.ylabel('Return')
     plt.grid(True)
+    plt.savefig("plots/returns_plot.png")
     plt.show()
 
 
@@ -16,6 +17,7 @@ def plot_correlation_heatmap(returns_df):
     plt.figure(figsize=(8, 6))
     sns.heatmap(corr, annot=True, cmap="coolwarm", fmt=".2f")
     plt.title("Correlation Heatmap")
+    plt.savefig("plots/correlation_heatmap.png")
     plt.show()
 
 
@@ -28,4 +30,5 @@ def plot_var_histogram(returns_series, var_value):
     plt.ylabel("Frequency")
     plt.legend()
     plt.grid(True)
+    plt.savefig("plots/var_histogram.png")
     plt.show()
