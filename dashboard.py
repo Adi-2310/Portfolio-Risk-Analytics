@@ -54,9 +54,7 @@ if tickers:
     default_weight = round(1.0 / len(tickers), 2)
     for ticker in tickers:
         default = st.session_state.weights.get(ticker, default_weight)
-        w = st.sidebar.slider(
-            f"{ticker} weight", 0.0, 1.0, default,0.01
-        )
+        w = st.sidebar.number_input(f"{ticker} weight", min_value=0.0, max_value=1.0, value=default, step=0.01)
         weights[ticker] = w
     total_weight = sum(weights.values())
     st.sidebar.markdown(f"**Total Weight:** {total_weight:.2f}")
