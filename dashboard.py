@@ -10,6 +10,18 @@ from datetime import datetime
 
 st.set_page_config(page_title="Portfolio Risk Dashboard", layout="wide")
 
+if "tickers" not in st.session_state:
+    st.session_state.tickers = ["AAPL", "MSFT", "GOOGL"]
+
+if "weights" not in st.session_state:
+    st.session_state.weights = [0.33, 0.33, 0.33]
+
+if "start_date" not in st.session_state:
+    st.session_state.start_date = datetime(2023, 1, 1)
+
+if "end_date" not in st.session_state:
+    st.session_state.end_date = datetime(2024, 1, 1)
+
 # Title
 st.title("📊 Portfolio Risk Analytics Dashboard")
 
@@ -19,27 +31,40 @@ st.sidebar.header("User Input")
 tickers = st.sidebar.multiselect(
     "Select Stocks",
     options=["AAPL", "MSFT", "GOOGL", "AMZN", "META"],
-    default=["AAPL", "MSFT"]
+    default=st.session_state.tickers
 )
+st.session_state.tickers = tickers
 
 start_date = st.sidebar.date_input("Start Date", datetime(2023, 1, 1))
 end_date = st.sidebar.date_input("End Date", datetime(2024, 1, 1))
+st.session_state.start_date = start_date
+st.session_state.end_date = end_date
 
 # Portfolio Weights
 st.sidebar.subheader("Portfolio Weights")
 weights = {}
 
+# Ensure weights is initialized properly
+if "weights" not in st.session_state or not isinstance(st.session_state.weights, dict):
+    st.session_state.weights = {}
+
+weights = {}
+
 if tickers:
     default_weight = round(1.0 / len(tickers), 2)
     for ticker in tickers:
-        weights[ticker] = st.sidebar.slider(
-            f"{ticker} weight", 0.0, 1.0, default_weight, 0.01
+        default = st.session_state.weights.get(ticker, default_weight)
+        w = st.sidebar.slider(
+            f"{ticker} weight", 0.0, 1.0, default
         )
+        weights[ticker] = w
     total_weight = sum(weights.values())
     st.sidebar.markdown(f"**Total Weight:** {total_weight:.2f}")
     if abs(total_weight - 1.0) > 0.01:
         st.sidebar.warning("Weights should sum to 1.0")
 
+st.session_state.weights = weights
+    
 # Run Analysis
 if st.button("🔍 Run Risk Analysis"):
     try:
@@ -99,49 +124,4 @@ if st.button("🔍 Run Risk Analysis"):
 
     except Exception as e:
         st.error(f"Something went wrong {e}")
-
-
-
-
-# # --- Sidebar Inputs ---
-# st.sidebar.header("Portfolio Configuration")
-# tickers = st.sidebar.text_input("Enter tickers (comma-separated):", "AAPL,GOOGL,MSFT").split(",")
-# start = st.sidebar.date_input("Start Date", pd.to_datetime("2023-01-01"))
-# end = st.sidebar.date_input("End Date", pd.to_datetime("2024-01-01"))
-
-# weights = st.sidebar.text_input("Portfolio Weights (comma):", "0.33,0.33,0.34")
-# weights = [w for w in weights]
-
-# ## - Fetch and display data
-# st.title("📊Portfolio Risk Analytics Dashboard")
-# st.subheader("Historial Price data")
-
-# data = fetch_data(tickers,start,end)
-# st.write(data.tail())
-
-# # --- Calculate Metrics ---
-# returns = calculate_daily_returns(data)
-# vol = calculate_annualised_volatility(returns)
-# var = calculate_var(returns)
-# sharpe = calculate_sharpe_ratio(returns)
-
-# # --- Display Metrics ---
-# st.subheader("📉 Risk Metrics")
-# st.write("**Annualized Volatility**")
-# st.dataframe(vol)
-# st.write("**Value at Risk (95%)**")
-# st.dataframe(var)
-# st.write("**Sharpe Ratio**")
-# st.dataframe(sharpe)
-
-# # --- Portfolio Metrics ---
-# port_vol, port_ret, port_sharpe = calculate_portfolio_metrics(returns, weights)
-# st.subheader("📦 Portfolio-Level Metrics")
-# st.markdown(f"**Annualized Volatility:** `{port_vol:.4f}`")
-# st.markdown(f"**Expected Annual Return:** `{port_ret:.4f}`")
-# st.markdown(f"**Sharpe Ratio:** `{port_sharpe:.4f}`")
-
-
-
-
 

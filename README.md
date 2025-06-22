@@ -62,7 +62,7 @@ This project is a complete **risk analysis engine** for financial portfolios, bu
 
 ---
 
-## 🌐 Running the dashboard (Coming soon)
+## 🌐 Running the dashboard 
     streamlit run dashboard.py
 
 ---
