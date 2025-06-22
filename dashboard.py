@@ -60,6 +60,7 @@ if tickers:
     st.sidebar.markdown(f"**Total Weight:** {total_weight:.2f}")
     if abs(total_weight - 1.0) > 0.01:
         st.sidebar.warning("Weights should sum to 1.0")
+st.sidebar.progress(min(total_weight, 1.0))
 
 st.session_state.weights = weights
     
