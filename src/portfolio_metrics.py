@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 def calculate_portfolio_metrics(returns_df, weights, risk_free_rate=0.0):
-    weights = np.array(weights)
+    weights = np.array([weights[ticker] for ticker in returns_df.columns])
     mean_returns = returns_df.mean()
     cov_matrix = returns_df.cov()
 

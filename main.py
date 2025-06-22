@@ -17,7 +17,10 @@ print("##############")
 
 # CALCULATING DAILY RETURNS
 returns = calculate_daily_returns(adj_data)
+# print(returns)
 print(returns.head())
+print(returns.tail())
+print(weights)
 
 print("##############")
 
